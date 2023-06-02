@@ -102,6 +102,16 @@ public class PlayerMovment : MonoBehaviour
             /*else
                 lastDesiredMoveSpeed = ;*/
         }
+        if(Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 4f)
+        {
+            StopAllCoroutines();
+            StartCoroutine(SmoothlyLerpMoveSpeed());
+        }
+        /*else
+        {
+            moveSpeed = desiredMoveSpeed;
+        }
+        lastDesiredMoveSpeed = desiredMoveSpeed;*/
       
     }
 

@@ -256,7 +256,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 7
-  slideSpeed: 0
+  slideSpeed: 20
   groundDrag: 4
   jumpForce: 12
   jumpCoolDown: 0.25
