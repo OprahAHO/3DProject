@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using TMPro;
 using UnityEngine;
 
 public class PlayerMovment : MonoBehaviour
 {
     [Header("Movement")]
-    public float moveSpeed;
+    private float moveSpeed;
+    public float walkSpeed;
     public float slideSpeed;
 
     private float desiredMoveSpeed;
@@ -18,6 +20,7 @@ public class PlayerMovment : MonoBehaviour
     public float jumpCoolDown;
     public float airMultiplier;
     bool readyToJump;
+
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -50,6 +53,8 @@ public class PlayerMovment : MonoBehaviour
 
     public bool sliding;
 
+    public TextMeshProUGUI text_speed;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -64,6 +69,7 @@ public class PlayerMovment : MonoBehaviour
         MyInput();
         SpeedControl();
         StateHandler();
+        TextStuff();
 
         if (grounded)
             rb.drag = groundDrag;
@@ -80,9 +86,9 @@ public class PlayerMovment : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if(Input.GetKey(jumpKey) && readyToJump && grounded)
+        if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
-           
+
             readyToJump = false;
 
             Jump();
@@ -93,7 +99,7 @@ public class PlayerMovment : MonoBehaviour
 
     private void StateHandler()
     {
-        if(sliding)
+        if (sliding)
         {
             state = MovementState.sliding;
 
@@ -102,7 +108,17 @@ public class PlayerMovment : MonoBehaviour
             /*else
                 lastDesiredMoveSpeed = ;*/
         }
-        if(Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 4f)
+        else if(grounded)
+        {
+            state = MovementState.walking;
+            desiredMoveSpeed = walkSpeed;
+        }
+        else
+        {
+            state = MovementState.air;
+            
+        }
+        if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 4f)
         {
             StopAllCoroutines();
             StartCoroutine(SmoothlyLerpMoveSpeed());
@@ -112,7 +128,7 @@ public class PlayerMovment : MonoBehaviour
             moveSpeed = desiredMoveSpeed;
         }
         lastDesiredMoveSpeed = desiredMoveSpeed;*/
-      
+
     }
 
     private IEnumerator SmoothlyLerpMoveSpeed()
@@ -120,9 +136,9 @@ public class PlayerMovment : MonoBehaviour
         float time = 0;
         float difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
         float startValue = moveSpeed;
-        while(time < difference)
+        while (time < difference)
         {
-            moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time/difference);
+            moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / difference);
             time += Time.deltaTime;
             yield return null;
         }
@@ -133,7 +149,7 @@ public class PlayerMovment : MonoBehaviour
 
         if (OnSlope() && !exitingSlope)
         {
-            rb.AddForce(GetSlopeMoveDirection(moveDirection)* moveSpeed * 20f, ForceMode.Force);
+            rb.AddForce(GetSlopeMoveDirection(moveDirection) * moveSpeed * 20f, ForceMode.Force);
 
             if (rb.velocity.y > 0)
                 rb.AddForce(Vector3.down * 80f, ForceMode.Force);
@@ -150,9 +166,9 @@ public class PlayerMovment : MonoBehaviour
 
     private void SpeedControl()
     {
-        if(OnSlope() && !exitingSlope)
+        if (OnSlope() && !exitingSlope)
         {
-            if(rb.velocity.magnitude > moveSpeed)
+            if (rb.velocity.magnitude > moveSpeed)
                 rb.velocity = rb.velocity.normalized * moveSpeed;
         }
 
@@ -170,7 +186,7 @@ public class PlayerMovment : MonoBehaviour
     {
         exitingSlope = true;
 
-        rb.velocity = new Vector3 (rb.velocity.x, 0f, rb.velocity.z);
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
@@ -183,16 +199,30 @@ public class PlayerMovment : MonoBehaviour
 
     public bool OnSlope()
     {
-        if(Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
         {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
             return angle < maxSloppeAngle && angle != 0;
         }
         return false;
-    }    
+    }
     public Vector3 GetSlopeMoveDirection(Vector3 direction)
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
-    
+
+    private void TextStuff()
+    {
+        //Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+        text_speed.SetText("Speed:" + rb.velocity.magnitude, 1);
+
+      /*  if (OnSlope())
+            text_speed.SetText("Speed: " + Round(rb.velocity.magnitude, 1) + " / " + Round(moveSpeed, 1));
+
+        else
+            text_speed.SetText("Speed: " + Round(flatVel.magnitude, 1) + " / " + Round(moveSpeed, 1));
+
+        text_mode.SetText(state.ToString());*/
+    }
 }
