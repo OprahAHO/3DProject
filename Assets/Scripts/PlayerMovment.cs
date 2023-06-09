@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -10,6 +11,7 @@ public class PlayerMovment : MonoBehaviour
     private float moveSpeed;
     public float walkSpeed;
     public float slideSpeed;
+    public float wallRunSpeed;
 
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
@@ -20,6 +22,8 @@ public class PlayerMovment : MonoBehaviour
     public float jumpCoolDown;
     public float airMultiplier;
     bool readyToJump;
+
+
 
 
     [Header("Keybinds")]
@@ -47,13 +51,16 @@ public class PlayerMovment : MonoBehaviour
     public enum MovementState
     {
         walking,
+        wallrunning,
         sliding,
         air
     }
 
     public bool sliding;
+    public bool wallrunning;
 
     public TextMeshProUGUI text_speed;
+    private TextMeshProUGUI text_mode;
 
     private void Start()
     {
@@ -99,6 +106,11 @@ public class PlayerMovment : MonoBehaviour
 
     private void StateHandler()
     {
+        if(wallrunning)
+        {
+            state = MovementState.wallrunning;
+            desiredMoveSpeed = wallRunSpeed;
+        }
         if (sliding)
         {
             state = MovementState.sliding;
@@ -126,8 +138,8 @@ public class PlayerMovment : MonoBehaviour
         /*else
         {
             moveSpeed = desiredMoveSpeed;
-        }
-        lastDesiredMoveSpeed = desiredMoveSpeed;*/
+        }*/
+        lastDesiredMoveSpeed = desiredMoveSpeed;
 
     }
 
@@ -161,7 +173,7 @@ public class PlayerMovment : MonoBehaviour
         else if (!grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
 
-        rb.useGravity = !OnSlope();
+        if(!wallrunning)rb.useGravity = !OnSlope();
     }
 
     private void SpeedControl()
@@ -173,7 +185,7 @@ public class PlayerMovment : MonoBehaviour
         }
 
         else
-        {
+        { 
             Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             if (flatVel.magnitude > moveSpeed)
             {
@@ -213,15 +225,13 @@ public class PlayerMovment : MonoBehaviour
 
     private void TextStuff()
     {
-        //Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        /*Vector3 flatVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
 
-        text_speed.SetText("Speed:" + rb.velocity.magnitude, 1);
-
-      /*  if (OnSlope())
-            text_speed.SetText("Speed: " + Round(rb.velocity.magnitude, 1) + " / " + Round(moveSpeed, 1));
+        if (OnSlope())
+            text_speed.SetText("Speed: " + Math.Round(rb.velocity.magnitude, 1) + " / " + Math.Round(moveSpeed, 1));
 
         else
-            text_speed.SetText("Speed: " + Round(flatVel.magnitude, 1) + " / " + Round(moveSpeed, 1));
+            text_speed.SetText("Speed: " + Math.Round(flatVel.magnitude, 1) + " / " + Math.Round(moveSpeed, 1));
 
         text_mode.SetText(state.ToString());*/
     }
