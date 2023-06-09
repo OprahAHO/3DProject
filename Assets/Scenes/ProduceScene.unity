@@ -309,7 +309,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 53571e762113d1c438b68817b03fcb3a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -391,6 +391,7 @@ MonoBehaviour:
   useGravity: 0
   gravityGounterForce: 0
   orientation: {fileID: 217306456}
+  cam: {fileID: 1512497717}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -658,6 +659,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1512497717 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6503945504760162081, guid: fc24a53e8fe42dd489c249f1373cf5d2, type: 3}
+  m_PrefabInstance: {fileID: 6503945504342362708}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd8afe0a089ec24b958a6f893b69e01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1569540084 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5404660527095533088, guid: c173b62b945b2dd4787ab4522f379104, type: 3}
@@ -747,7 +759,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 95154dd5b5941f64bb1ebc15b5a309ea, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -792,6 +804,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1920734391 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6503945504350519240, guid: fc24a53e8fe42dd489c249f1373cf5d2, type: 3}
+  m_PrefabInstance: {fileID: 6503945504342362708}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2099707672
 GameObject:
   m_ObjectHideFlags: 0
@@ -929,6 +946,22 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6503945504760162081, guid: fc24a53e8fe42dd489c249f1373cf5d2, type: 3}
+      propertyPath: camHolder
+      value: 
+      objectReference: {fileID: 1920734391}
+    - target: {fileID: 6503945504760162087, guid: fc24a53e8fe42dd489c249f1373cf5d2, type: 3}
+      propertyPath: field of view
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6503945504760162087, guid: fc24a53e8fe42dd489c249f1373cf5d2, type: 3}
+      propertyPath: far clip plane
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6503945504760162087, guid: fc24a53e8fe42dd489c249f1373cf5d2, type: 3}
+      propertyPath: near clip plane
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 6503945504823802400, guid: fc24a53e8fe42dd489c249f1373cf5d2, type: 3}
       propertyPath: m_Name
       value: PlayerControl
@@ -987,7 +1020,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6503945504877870818, guid: fc24a53e8fe42dd489c249f1373cf5d2, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
