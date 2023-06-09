@@ -225,14 +225,8 @@ public class PlayerMovment : MonoBehaviour
 
     private void TextStuff()
     {
-        /*Vector3 flatVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        Vector3 flatVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
 
-        if (OnSlope())
-            text_speed.SetText("Speed: " + Math.Round(rb.velocity.magnitude, 1) + " / " + Math.Round(moveSpeed, 1));
-
-        else
-            text_speed.SetText("Speed: " + Math.Round(flatVel.magnitude, 1) + " / " + Math.Round(moveSpeed, 1));
-
-        text_mode.SetText(state.ToString());*/
+        text_speed.SetText("Speed: " + Math.Round(rb.velocity.magnitude, 1));
     }
 }
