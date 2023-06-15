@@ -12,7 +12,6 @@ public class PlayerMovment : MonoBehaviour
     public float walkSpeed;
     public float slideSpeed;
     public float wallRunSpeed;
-
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
 
@@ -21,10 +20,9 @@ public class PlayerMovment : MonoBehaviour
     public float jumpForce;
     public float jumpCoolDown;
     public float airMultiplier;
+    private int jumpsRemaining;
+    public int extraJumpNum;
     bool readyToJump;
-
-
-
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -55,20 +53,24 @@ public class PlayerMovment : MonoBehaviour
         sliding,
         air
     }
-
+    
     public bool sliding;
     public bool wallrunning;
 
     public TextMeshProUGUI text_speed;
-    private TextMeshProUGUI text_mode;
-
+    private void Awake()
+    {
+        extraJumpNum = 1;
+    }
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
         readyToJump = true;
-    }
+
+        jumpsRemaining = extraJumpNum;
+}
     private void Update()
     {
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
@@ -93,17 +95,16 @@ public class PlayerMovment : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if (Input.GetKey(jumpKey) && readyToJump && grounded)
+        if (Input.GetKeyDown(jumpKey) && CanJump())
         {
-
-            readyToJump = false;
+           // readyToJump = false;
 
             Jump();
 
-            Invoke(nameof(ResetJump), jumpCoolDown);
+           // Invoke(nameof(ResetJump), jumpCoolDown);
         }
     }
-
+    bool keepMomentum;
     private void StateHandler()
     {
         if(wallrunning)
@@ -128,6 +129,8 @@ public class PlayerMovment : MonoBehaviour
         else
         {
             state = MovementState.air;
+            if(moveSpeed < airMultiplier)
+                desiredMoveSpeed = airMultiplier;
             
         }
         if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 4f)
@@ -166,14 +169,16 @@ public class PlayerMovment : MonoBehaviour
             if (rb.velocity.y > 0)
                 rb.AddForce(Vector3.down * 80f, ForceMode.Force);
         }
-
         if (grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
 
-        else if (!grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
 
-        if(!wallrunning)rb.useGravity = !OnSlope();
+        else if (!grounded)
+        {
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+        }
+
+        if (!wallrunning)rb.useGravity = !OnSlope();
     }
 
     private void SpeedControl()
@@ -196,17 +201,37 @@ public class PlayerMovment : MonoBehaviour
     }
     private void Jump()
     {
+        readyToJump = false;
         exitingSlope = true;
 
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+
+        if (!grounded)
+        {
+            jumpsRemaining--;
+        }
+        Invoke(nameof(ResetJump), jumpCoolDown);
+    }
+    private bool CanJump()
+    {
+        return readyToJump && (grounded || jumpsRemaining > 0 );
     }
 
     private void ResetJump()
     {
         readyToJump = true;
         exitingSlope = false;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        //Debug.Log(1111111111111111111);
+        if (collision.gameObject.GetComponent<PlaneComponent>() != false) 
+        {
+            jumpsRemaining = extraJumpNum;
+        }
     }
 
     public bool OnSlope()
@@ -227,6 +252,6 @@ public class PlayerMovment : MonoBehaviour
     {
         Vector3 flatVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
 
-        text_speed.SetText("Speed: " + Math.Round(rb.velocity.magnitude, 1));
+        text_speed.SetText("Speed: " + Mathf.Round(rb.velocity.magnitude).ToString());
     }
 }
