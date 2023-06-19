@@ -138,10 +138,10 @@ public class PlayerMovment : MonoBehaviour
             StopAllCoroutines();
             StartCoroutine(SmoothlyLerpMoveSpeed());
         }
-        /*else
+        else
         {
             moveSpeed = desiredMoveSpeed;
-        }*/
+        }
         lastDesiredMoveSpeed = desiredMoveSpeed;
 
     }
@@ -227,7 +227,7 @@ public class PlayerMovment : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //Debug.Log(1111111111111111111);
+        
         if (collision.gameObject.GetComponent<PlaneComponent>() != false) 
         {
             jumpsRemaining = extraJumpNum;
