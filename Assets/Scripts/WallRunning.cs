@@ -46,37 +46,61 @@ public class WallRunning : MonoBehaviour
     [Header("Reference")]
     public Transform orientation;
     public PlayerCam cam;
-    private PlayerMovment pm;
+    private PlayerMovementAdv pm;
     private Rigidbody rb;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        pm = GetComponent<PlayerMovment>();
+        pm = GetComponent<PlayerMovementAdv>();
     }
 
     private void Update()
     {
         CheckForWall();
         StateMachine();
+
     }
     private void FixedUpdate()
     {
         if(pm.wallrunning)
             WallRunningMovement();
+       
     }
 
     private void CheckForWall()
     {
 
-        wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallHit, wallCheckDistance, whatIsWall);
-        wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallHit, wallCheckDistance, whatIsWall);
+         /*wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallHit, wallCheckDistance, whatIsWall);
+         wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallHit, wallCheckDistance, whatIsWall);*/
+        wallRight = (Physics.Raycast(transform.position, orientation.right, out RaycastHit rightWallHit, wallCheckDistance) && rightWallHit.collider.GetComponent<WallComponent>() != null);
+        wallLeft = (Physics.Raycast(transform.position, -orientation.right, out RaycastHit leftWallHit, wallCheckDistance) && leftWallHit.collider.GetComponent<WallComponent>() != null);
+        
+
     }
 
     private bool AboveGround()
     {
-        return !Physics.Raycast(transform.position, Vector3.down, minJumpHeight, whatIsGround);
+        return !Physics.Raycast(transform.position, Vector3.down, minJumpHeight) || !pm.grounded;
     }
+
+   /* private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<groundedComponent>() != null)
+        {
+            
+        }
+
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<groundedComponent>() != null)
+        {
+           
+        }
+    }*/
+
 
     private void StateMachine()
     {
@@ -91,7 +115,16 @@ public class WallRunning : MonoBehaviour
             if(!pm.wallrunning)
                 StartWallRun();
 
-            if(Input.GetKeyDown(jumpKey)) WallJump();
+            if (wallRunTimer > 0)
+                wallRunTimer -= Time.deltaTime;
+
+            if (wallRunTimer <= 0 && pm.wallrunning)
+            {
+                exitingWall = true;
+                exitWallTimer = exitWallTime;
+            }
+
+            if (Input.GetKeyDown(jumpKey)) WallJump();
         }
 
         else if(exitingWall)
@@ -102,7 +135,7 @@ public class WallRunning : MonoBehaviour
             if(exitWallTime > 0)
                 exitWallTimer -= Time.deltaTime;
 
-            if(exitWallTimer < 0)
+            if(exitWallTimer <= 0)
                 exitingWall = false;
 
         }
@@ -118,8 +151,11 @@ public class WallRunning : MonoBehaviour
     {
         pm.wallrunning = true;
 
+        wallRunTimer = maxWallRunTime;
+
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
+        if (cam == null) return;
         cam.DoFov(90f);
         if (wallLeft) cam.DoTilt(-10f);
         if (wallRight) cam.DoTilt(10f);
@@ -146,6 +182,9 @@ public class WallRunning : MonoBehaviour
 
         if (!(wallLeft&& horizontalInput > 0)&& !(wallRight && horizontalInput <0))
             rb.AddForce(-wallForward * 100, ForceMode.Force);
+
+        if(useGravity)
+            rb.AddForce(transform.up*gravityGounterForce,ForceMode.Force);
 
 
 

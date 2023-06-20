@@ -1,19 +1,17 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerMovment : MonoBehaviour
+public class PlayerMovementAdv : MonoBehaviour
 {
     [Header("Movement")]
     private float moveSpeed;
     public float walkSpeed;
     public float slideSpeed;
     public float slideGroundSpeed;
-
+    
     public float groundDrag;
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
@@ -40,7 +38,7 @@ public class PlayerMovment : MonoBehaviour
 
     [Header("Ground Check")]
     public float playerHeight;
-    bool grounded;
+    public bool grounded;
 
     public Transform orientation;
 
@@ -57,7 +55,7 @@ public class PlayerMovment : MonoBehaviour
         sliding,
         wallrunning,
         air
-
+        
     }
 
     public bool sliding;
@@ -92,7 +90,7 @@ public class PlayerMovment : MonoBehaviour
             jumpsRemaining = extraJumpNum;
             grounded = true;
         }
-
+       
     }
 
     private void OnCollisionExit(Collision collision)
@@ -109,12 +107,12 @@ public class PlayerMovment : MonoBehaviour
     bool keepMomentum;
     private void StateHandler()
     {
-        if (wallrunning)
+        if(wallrunning)
         {
             state = MovementState.wallrunning;
             desiredMoveSpeed = wallrunSpeed;
         }
-        if (sliding)
+        if(sliding)
         {
             state = MovementState.sliding;
 
@@ -127,7 +125,7 @@ public class PlayerMovment : MonoBehaviour
             else
                 desiredMoveSpeed = slideGroundSpeed;
         }
-        else if (grounded)
+        else if(grounded)
         {
             state = MovementState.walking;
             desiredMoveSpeed = walkSpeed;
@@ -193,17 +191,17 @@ public class PlayerMovment : MonoBehaviour
     {
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        if (OnSlope() && !exitingSlope)
+        if(OnSlope() && !exitingSlope)
         {
             rb.AddForce(GetSlopeMoveDirection(moveDirection) * moveSpeed * 20f, ForceMode.Force);
 
-            if (rb.velocity.y > 0)
-                rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+            if(rb.velocity.y>0)
+                rb.AddForce(Vector3.down * 80f,ForceMode.Force);
         }
 
-        else if (grounded)
+        else if(grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
-        else if (!grounded)
+        else if(!grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
 
         rb.useGravity = !OnSlope();
@@ -211,7 +209,7 @@ public class PlayerMovment : MonoBehaviour
 
     private void SpeedControl()
     {
-        if (OnSlope() && !exitingSlope)
+        if(OnSlope() && !exitingSlope)
         {
             if (rb.velocity.magnitude > moveSpeed)
                 rb.velocity = rb.velocity.normalized * moveSpeed;
@@ -269,10 +267,10 @@ public class PlayerMovment : MonoBehaviour
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
-
     private void UpdateSpeedText()
     {
         float horizontalSpeed = new Vector3(rb.velocity.x, 0f, rb.velocity.z).magnitude;
         speedText.text = "Speed: " + horizontalSpeed.ToString("F2");
     }
+
 }
