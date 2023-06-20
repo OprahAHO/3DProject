@@ -593,15 +593,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afdd294bf923ab94f8701be490441f01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 1536
-  whatIsWall:
-    serializedVersion: 2
-    m_Bits: 512
   wallRunForce: 200
   wallJumpUpForce: 7
-  wallJumpSideForce: 14
+  wallJumpSideForce: 3000
   wallClimbSpeed: 3
   maxWallRunTime: 4
   jumpKey: 32
@@ -1199,10 +1193,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7609410591620730464, guid: eeec0296739358a4891cc6321723eb1a, type: 3}
       propertyPath: walkSpeed
-      value: 10
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7609410591620730464, guid: eeec0296739358a4891cc6321723eb1a, type: 3}
+      propertyPath: slideSpeed
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7609410591620730464, guid: eeec0296739358a4891cc6321723eb1a, type: 3}
       propertyPath: wallrunSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7609410591620730464, guid: eeec0296739358a4891cc6321723eb1a, type: 3}
+      propertyPath: slideGroundSpeed
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8154646317358505012, guid: eeec0296739358a4891cc6321723eb1a, type: 3}

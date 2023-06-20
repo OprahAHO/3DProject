@@ -7,8 +7,6 @@ using UnityEngine.XR;
 public class WallRunning : MonoBehaviour
 {
     [Header("Wallrunning")]
-    public LayerMask whatIsGround;
-    public LayerMask whatIsWall;
     public float wallRunForce;
     public float wallJumpUpForce;
     public float wallJumpSideForce;
@@ -70,9 +68,6 @@ public class WallRunning : MonoBehaviour
 
     private void CheckForWall()
     {
-
-         /*wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallHit, wallCheckDistance, whatIsWall);
-         wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallHit, wallCheckDistance, whatIsWall);*/
         wallRight = (Physics.Raycast(transform.position, orientation.right, out RaycastHit rightWallHit, wallCheckDistance) && rightWallHit.collider.GetComponent<WallComponent>() != null);
         wallLeft = (Physics.Raycast(transform.position, -orientation.right, out RaycastHit leftWallHit, wallCheckDistance) && leftWallHit.collider.GetComponent<WallComponent>() != null);
         
@@ -83,25 +78,6 @@ public class WallRunning : MonoBehaviour
     {
         return !Physics.Raycast(transform.position, Vector3.down, minJumpHeight) || !pm.grounded;
     }
-
-   /* private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.GetComponent<groundedComponent>() != null)
-        {
-            
-        }
-
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.GetComponent<groundedComponent>() != null)
-        {
-           
-        }
-    }*/
-
-
     private void StateMachine()
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -165,7 +141,6 @@ public class WallRunning : MonoBehaviour
     {
         rb.useGravity = useGravity;
         
-
         Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
 
         Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
@@ -209,4 +184,6 @@ public class WallRunning : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x,0f,rb.velocity.z);
         rb.AddForce(forceToApply, ForceMode.Impulse);
     }
+
+
 }
