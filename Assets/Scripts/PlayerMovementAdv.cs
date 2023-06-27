@@ -265,7 +265,7 @@ public class PlayerMovementAdv : MonoBehaviour
 
     public Vector3 GetSlopeMoveDirection(Vector3 direction)
     {
-        return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
+        return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized; 
     }
     private void UpdateSpeedText()
     {

@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.XR;
 
-public class WallRunning : MonoBehaviour
+public class WallRunningAdv : MonoBehaviour
 {
     [Header("Wallrunning")]
     public float wallRunForce;
@@ -13,6 +11,7 @@ public class WallRunning : MonoBehaviour
     public float wallClimbSpeed;
     public float maxWallRunTime;
     private float wallRunTimer;
+    private Vector3 wallNormal;
 
     [Header("Input")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -47,38 +46,51 @@ public class WallRunning : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         pm = GetComponent<PlayerMovementAdv>();
+        
     }
 
     private void Update()
     {
         CheckForWall();
         StateMachine();
+        
     }
     private void FixedUpdate()
     {
-        if(pm.wallrunning)
+        if (pm.wallrunning)
             WallRunningMovement();
-       
+
     }
 
     private void CheckForWall()
     {
         wallRight = (Physics.Raycast(transform.position, orientation.right, out RaycastHit rightWallHit, wallCheckDistance) && rightWallHit.collider.GetComponent<WallComponent>() != null);
         wallLeft = (Physics.Raycast(transform.position, -orientation.right, out RaycastHit leftWallHit, wallCheckDistance) && leftWallHit.collider.GetComponent<WallComponent>() != null);
+
     }
 
     private bool AboveGround()
     {
         return !Physics.Raycast(transform.position, Vector3.down, minJumpHeight) || !pm.grounded;
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        
+        if (collision.gameObject.GetComponent<WallComponent>() != null)
+        {
+            wallNormal = collision.contacts[0].normal;
+            //Debug.Log(wallNormal);
+        }
+
+    }
     private void StateMachine()
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if((wallLeft || wallRight) && verticalInput > 0 && AboveGround() && !exitingWall)
+        if ((wallLeft || wallRight)  && AboveGround() && !exitingWall)
         {
-            if(!pm.wallrunning)
+            if (!pm.wallrunning)
                 StartWallRun();
 
             if (wallRunTimer > 0)
@@ -93,22 +105,22 @@ public class WallRunning : MonoBehaviour
             if (Input.GetKeyDown(jumpKey)) WallJump();
         }
 
-        else if(exitingWall)
+        else if (exitingWall)
         {
-            if(pm.wallrunning)
+            if (pm.wallrunning)
                 StopWallRun();
 
-            if(exitWallTime > 0)
+            if (exitWallTime > 0)
                 exitWallTimer -= Time.deltaTime;
 
-            if(exitWallTimer <= 0)
+            if (exitWallTimer <= 0)
                 exitingWall = false;
 
         }
 
         else
         {
-            if(pm.wallrunning)
+            if (pm.wallrunning)
                 StopWallRun();
         }
     }
@@ -131,29 +143,21 @@ public class WallRunning : MonoBehaviour
     {
         rb.useGravity = useGravity;
 
-        //Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
-        Vector3 wallNormal;
-        if (wallRight)
-        {
-            wallNormal = -orientation.right.normalized;
-        }
-        else
-        {
-            wallNormal = orientation.right.normalized;
-        }
-
         Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
-
-        if((orientation.forward - wallForward).magnitude > (orientation.forward - - wallForward).magnitude)
+        Debug.Log(wallForward);
+        if ((orientation.forward - wallForward).magnitude > (orientation.forward + wallForward).magnitude)
             wallForward = -wallForward;
+        Debug.Log(wallForward);
 
         rb.AddForce(wallForward * wallRunForce, ForceMode.Force);
 
-        if (!(wallLeft&& horizontalInput > 0)&& !(wallRight && horizontalInput <0))
+        if (!(wallLeft && horizontalInput > 0) && !(wallRight && horizontalInput < 0))
+        {
             rb.AddForce(-wallForward * 100, ForceMode.Force);
+        }
 
-        if(useGravity)
-            rb.AddForce(transform.up*gravityGounterForce,ForceMode.Force);
+        if (useGravity)
+            rb.AddForce(transform.up * gravityGounterForce, ForceMode.Force);
     }
 
     private void StopWallRun()
@@ -169,18 +173,8 @@ public class WallRunning : MonoBehaviour
         exitingWall = true;
         exitWallTimer = exitWallTime;
 
-        Vector3 wallNormal;
-        if(wallRight)
-        {
-            wallNormal = -orientation.right.normalized;
-        }
-        else
-        {
-            wallNormal = orientation.right.normalized;
-        }
-        //Debug.Log(wallNormal);
         Vector3 forceToApply = transform.up * wallJumpUpForce + wallNormal * wallJumpSideForce;
-        rb.velocity = new Vector3(rb.velocity.x,0f,rb.velocity.z);
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(forceToApply, ForceMode.Impulse);
         //Debug.Log(forceToApply);
     }

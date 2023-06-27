@@ -223,8 +223,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8154646316629102840}
   - component: {fileID: 8154646316629102821}
-  - component: {fileID: 8154646316629102822}
-  - component: {fileID: 7609410590164829460}
+  - component: {fileID: 5627003717168777130}
   m_Layer: 0
   m_Name: PlayerCam
   m_TagString: Untagged
@@ -298,15 +297,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &8154646316629102822
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8154646316629102841}
-  m_Enabled: 1
---- !u!114 &7609410590164829460
+--- !u!114 &5627003717168777130
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -315,7 +306,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8154646316629102841}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72b82690ad0b82e42814217d8cfd736a, type: 3}
+  m_Script: {fileID: 11500000, guid: 3fd8afe0a089ec24b958a6f893b69e01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sensX: 400
@@ -417,6 +408,7 @@ GameObject:
   - component: {fileID: 8154646317466674963}
   - component: {fileID: 7609410591620730464}
   - component: {fileID: 7609410591620730467}
+  - component: {fileID: 3632376266169763557}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -554,9 +546,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7eb2d8bee6e2044195d501ad5be2024, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 10.09
-  slideSpeed: 20
-  slideGroundSpeed: 15
+  walkSpeed: 7
+  slideSpeed: 15
+  slideGroundSpeed: 10
   groundDrag: 4
   wallrunSpeed: 20
   speedIncreaseMultiplier: 1.5
@@ -568,6 +560,7 @@ MonoBehaviour:
   maxSloppeAngle: 45
   jumpKey: 32
   playerHeight: 2
+  grounded: 0
   orientation: {fileID: 8154646317530229673}
   state: 0
   sliding: 0
@@ -591,6 +584,33 @@ MonoBehaviour:
   slideForce: 200
   slideYScale: 0.5
   slideKey: 306
+--- !u!114 &3632376266169763557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8154646317466675179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afdd294bf923ab94f8701be490441f01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallRunForce: 200
+  wallJumpUpForce: 7
+  wallJumpSideForce: 40
+  wallClimbSpeed: 3
+  maxWallRunTime: 4
+  jumpKey: 32
+  upwardsRunKey: 304
+  downwardsRunKey: 306
+  wallCheckDistance: 0.7
+  minJumpHeight: 2
+  exitWallTime: 0.2
+  useGravity: 0
+  gravityGounterForce: 27
+  orientation: {fileID: 8154646317530229673}
+  cam: {fileID: 5627003717168777130}
 --- !u!1 &8154646317530229674
 GameObject:
   m_ObjectHideFlags: 0
