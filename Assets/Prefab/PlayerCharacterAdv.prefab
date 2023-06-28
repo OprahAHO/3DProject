@@ -409,6 +409,7 @@ GameObject:
   - component: {fileID: 7609410591620730464}
   - component: {fileID: 7609410591620730467}
   - component: {fileID: 3632376266169763557}
+  - component: {fileID: 6810940984657608843}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -598,19 +599,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallRunForce: 200
   wallJumpUpForce: 7
-  wallJumpSideForce: 40
+  wallJumpSideForce: 20
   wallClimbSpeed: 3
   maxWallRunTime: 4
   jumpKey: 32
-  upwardsRunKey: 304
-  downwardsRunKey: 306
   wallCheckDistance: 0.7
   minJumpHeight: 2
   exitWallTime: 0.2
-  useGravity: 0
-  gravityGounterForce: 27
+  useGravity: 1
+  gravityGounterForce: 30
   orientation: {fileID: 8154646317530229673}
   cam: {fileID: 5627003717168777130}
+--- !u!114 &6810940984657608843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8154646317466675179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74933dd57e9da8b44b7ec8a6b289f140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orientation: {fileID: 8154646317530229673}
+  rb: {fileID: 8154646317466674966}
+  pm: {fileID: 7609410591620730464}
+  climbSpeed: 10
+  maxClimbTime: 1
+  climbJumpUpForce: 15
+  climbJumpBackForce: 12
+  jumpKey: 32
+  climbJumps: 1
+  detectionLength: 0.75
+  sphereCastRadius: 0.25
+  maxWallLookAngle: 30
+  rayHeight: 1.8
+  minWallNormalAngleChange: 5
+  exitingWall: 0
 --- !u!1 &8154646317530229674
 GameObject:
   m_ObjectHideFlags: 0

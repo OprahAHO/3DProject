@@ -139,7 +139,7 @@ public class WallRunningAdv : MonoBehaviour
         if (wallRight) cam.DoTilt(15f);
     }
 
-    private void WallRunningMovement()
+    public void WallRunningMovement()
     {
         rb.useGravity = useGravity;
 

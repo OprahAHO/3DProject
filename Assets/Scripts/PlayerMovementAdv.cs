@@ -112,7 +112,7 @@ public class PlayerMovementAdv : MonoBehaviour
             state = MovementState.wallrunning;
             desiredMoveSpeed = wallrunSpeed;
         }
-        if(sliding)
+        else if(sliding)
         {
             state = MovementState.sliding;
 
